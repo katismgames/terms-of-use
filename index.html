@@ -10,16 +10,28 @@
             'ko': 'terms-of-use-kor.html', // 한국어
             'en': 'terms-of-use-eng.html', // 영어 (기본값)
             'ja': 'terms-of-use-jpn.html', // 일본어
-            'zh': 'terms-of-use-zho.html', // 중국어
+            'zh': 'terms-of-use-zhs.html', // 중국어(간체)
+            'zht': 'terms-of-use-zht.html', // 중국어(번체)
             'es': 'terms-of-use-spa.html', // 스페인어
             'th': 'terms-of-use-tha.html'  // 태국어
         };
 
         // 브라우저 언어 감지
-        const userLang = (navigator.language || navigator.userLanguage).substring(0, 2).toLowerCase();
+        const fullLang = (navigator.language || navigator.userLanguage).toLowerCase();
+        const userLang = fullLang.substring(0, 2);
 
-        // 매칭되는 언어가 없으면 기본값인 영어(eng)로 설정
-        const targetPage = languageMap[userLang] || languageMap['en'];
+        let targetPage;
+
+        // 중국어 간체/번체 구분
+        if (userLang === 'zh') {
+            if (fullLang.includes('tw') || fullLang.includes('hk') || fullLang.includes('mo')) {
+                targetPage = languageMap['zht']; // 번체
+            } else {
+                targetPage = languageMap['zh']; // 간체
+            }
+        } else {
+            targetPage = languageMap[userLang] || languageMap['en'];
+        }
 
         // 해당 언어 페이지로 이동
         window.location.replace(targetPage);
